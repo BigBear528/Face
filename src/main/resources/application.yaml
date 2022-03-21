@@ -2,12 +2,17 @@ spring:
   datasource:
     username: root
     password: 1234567800
-    url: jdbc:mysql://localhost:3306/face?serverTimezone=UTC&userUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://47.109.34.96:3306/face?serverTimezone=UTC&userUnicode=true&characterEncoding=utf-8
     driver-class-name: com.mysql.cj.jdbc.Driver
+
 
 # 整合mybatis
 mybatis:
   type-aliases-package: com.face.pojo
   mapper-locations: classpath:mybatis/mapper/*.xml
+
+server:
+  port: 9000
+
 
 
