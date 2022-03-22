@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping("/addUser")
-    public Integer addUser(User user) {
+    public Integer addUser(@RequestBody User user) {
         return userMapper.addUser(user);
     }
 
