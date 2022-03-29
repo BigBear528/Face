@@ -9,10 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Mapper
-@Repository
+//@Repository
 public interface UserMapper {
 
     // 查询所有的用户
+//    @Select("select * from face_test")
     List<User> queryUserList();
 
     // 根据用户id查询

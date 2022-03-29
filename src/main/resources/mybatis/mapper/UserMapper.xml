@@ -11,7 +11,7 @@
         delete from face_test where id = #{id}
     </delete>
 
-    <select id="queryUserList" resultType="User">
+    <select id="queryUserList" resultType="com.face.pojo.User">
         select *
         from face_test
     </select>

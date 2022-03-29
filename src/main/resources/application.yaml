@@ -8,7 +8,12 @@ spring:
 
 # 整合mybatis
 mybatis:
-  type-aliases-package: com.face.pojo
+  #  type-aliases-package: com.face.pojo
+  mapper-locations: classpath:mybatis/mapper/*.xml
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+mybatis-plus:
   mapper-locations: classpath:mybatis/mapper/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
