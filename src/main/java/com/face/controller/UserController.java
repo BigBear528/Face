@@ -1,5 +1,7 @@
 package com.face.controller;
 
+import com.face.common.Constants;
+import com.face.exception.ServiceException;
 import com.face.mapper.UserMapper;
 import com.face.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/queryUserById")
-    public User queryUserById(Integer id) {
+    public User queryUserById(@RequestParam("id") Integer id) {
         User user = userMapper.queryUserById(id);
         return user;
     }
@@ -38,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("/updateUser")
-    public Integer updateUser(User user){
+    public Integer updateUser(User user) {
         return userMapper.updateUser(user);
     }
 }
