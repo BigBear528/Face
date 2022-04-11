@@ -5,6 +5,7 @@ import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.face.common.Constants;
+import com.face.controller.dto.ChangePasswordDTO;
 import com.face.controller.dto.LoginDTO;
 import com.face.controller.dto.StudentDTO;
 import com.face.exception.ServiceException;
@@ -41,4 +42,28 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
   }
+
+  @Override
+  public Boolean changePassword(ChangePasswordDTO changePasswordDTO) {
+    QueryWrapper<Student> queryWrapper = new QueryWrapper<>();
+    queryWrapper.eq("id", changePasswordDTO.getId());
+    queryWrapper.eq("password", changePasswordDTO.getCurrentPassword());
+    Student student;
+    try {
+      student = getOne(queryWrapper); // 从数据库查询用户信息
+      if(student != null){
+//        StudentDTO studentDTO = new StudentDTO();
+//        BeanUtil.copyProperties(student, studentDTO, true);
+//        String token = TokenUtils.genToken(student.getId(),student.getPassword());
+//        studentDTO.setToken(token);
+//        return studentDTO;
+      }else {
+        throw new ServiceException(Constants.CODE_600,"密码错误");
+      }
+    } catch (Exception e) {
+      LOG.error(e);
+      throw new ServiceException(Constants.CODE_500, "系统错误");
+    }
+  }
+
 }
