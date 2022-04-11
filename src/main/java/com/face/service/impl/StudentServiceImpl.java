@@ -3,6 +3,7 @@ package com.face.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.face.common.Constants;
 import com.face.controller.dto.ChangePasswordDTO;
@@ -57,6 +58,13 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 //        String token = TokenUtils.genToken(student.getId(),student.getPassword());
 //        studentDTO.setToken(token);
 //        return studentDTO;
+
+        UpdateWrapper<Student> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id",changePasswordDTO.getId()).set("password",changePasswordDTO.getNewPassword());
+        boolean isUpdate = update(updateWrapper);
+        return isUpdate;
+
+
       }else {
         throw new ServiceException(Constants.CODE_600,"密码错误");
       }
