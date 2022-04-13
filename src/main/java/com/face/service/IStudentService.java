@@ -12,4 +12,6 @@ public interface IStudentService extends IService<Student> {
   StudentDTO login(LoginDTO loginDTO);
 
   Boolean changePassword(ChangePasswordDTO changePasswordDTO);
+
+  Boolean uploadFace(Student student);
 }

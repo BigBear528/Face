@@ -11,5 +11,5 @@ public class Student {
   private String name;
   private String password;
   private int gender;
-  private String face;
+  private byte[] face;
 }
