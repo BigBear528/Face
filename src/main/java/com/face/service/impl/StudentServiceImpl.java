@@ -70,7 +70,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
       }
     } catch (Exception e) {
       LOG.error(e);
-      throw new ServiceException(Constants.CODE_500, "系统错误");
+      throw new ServiceException(Constants.CODE_600,"密码错误");
     }
   }
 
