@@ -3,13 +3,13 @@ package com.face.controller;
 import cn.hutool.core.util.StrUtil;
 import com.face.common.Constants;
 import com.face.common.Result;
-import com.face.controller.dto.ChangePasswordDTO;
-import com.face.controller.dto.LoginDTO;
-import com.face.controller.dto.StudentDTO;
+import com.face.controller.dto.*;
 import com.face.pojo.Student;
 import com.face.service.IStudentService;
+import com.face.utils.DistanceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
@@ -20,66 +20,52 @@ import java.io.InputStream;
 @RequestMapping("/student")
 public class StudentController {
 
-    @Resource
-    IStudentService iStudentService;
+  @Resource
+  IStudentService iStudentService;
 
-    @PostMapping("/login")
-    public Result login(@RequestBody LoginDTO loginDTO) {
-        String id = loginDTO.getId();
-        String password = loginDTO.getPassword();
-        if (StrUtil.isEmptyIfStr(password) || StrUtil.isEmptyIfStr(id)) {
-            return Result.error(Constants.CODE_400, "参数错误");
-        }
-
-        StudentDTO studentDTO = iStudentService.login(loginDTO);
-
-        return Result.success(studentDTO);
+  @PostMapping("/login")
+  public Result login(@RequestBody LoginDTO loginDTO) {
+    String id = loginDTO.getId();
+    String password = loginDTO.getPassword();
+    if (StrUtil.isEmptyIfStr(password) || StrUtil.isEmptyIfStr(id)) {
+      return Result.error(Constants.CODE_400, "参数错误");
     }
 
-    @PostMapping("changePassword")
-    public Result changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
-        String id = changePasswordDTO.getId();
-        String currentPassword = changePasswordDTO.getCurrentPassword();
-        String newPassword = changePasswordDTO.getNewPassword();
-        if (StrUtil.isEmptyIfStr(currentPassword) || StrUtil.isEmptyIfStr(id) || StrUtil.isEmptyIfStr(newPassword)) {
-            return Result.error(Constants.CODE_400, "参数错误");
-        }
+    StudentDTO studentDTO = iStudentService.login(loginDTO);
 
-        Boolean ismodifySuccessfully = iStudentService.changePassword(changePasswordDTO);
+    return Result.success(studentDTO);
+  }
 
-        return Result.success(ismodifySuccessfully);
+  @PostMapping("changePassword")
+  public Result changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
+    String id = changePasswordDTO.getId();
+    String currentPassword = changePasswordDTO.getCurrentPassword();
+    String newPassword = changePasswordDTO.getNewPassword();
+    if (StrUtil.isEmptyIfStr(currentPassword) || StrUtil.isEmptyIfStr(id) || StrUtil.isEmptyIfStr(newPassword)) {
+      return Result.error(Constants.CODE_400, "参数错误");
     }
 
-    @PostMapping("faceUpload")
-    public Result faceUpload(@RequestParam("file") MultipartFile file, @RequestParam String id) throws IOException {
-//    if(file != null){
-////      System.out.println(file);
-////      BASE64Encoder base64Encoder =new BASE64Encoder();//base64
-////      // 将该字符串保存到数据库即可
-////      String baseimg = "data:" + file.getContentType()+";base64," + base64Encoder.encode(file.getBytes());
-////
-////      return Result.success(baseimg);
-//
-//    }
-//
-//    return Result.error();
+    Boolean ismodifySuccessfully = iStudentService.changePassword(changePasswordDTO);
 
+    return Result.success(ismodifySuccessfully);
+  }
 
-        InputStream ins = file.getInputStream();
-        byte[] buffer = new byte[1024];
-        int len = 0;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        while ((len = ins.read(buffer)) != -1) {
-            bos.write(buffer, 0, len);
-        }
-        bos.flush();
-        byte data[] = bos.toByteArray();
-        Student student = new Student();
-        student.setId(id);
-        student.setFace(data);
-        Boolean isUpload = iStudentService.uploadFace(student);
-
-        return Result.success(isUpload);
-
+  @PostMapping("/faceUpload")
+  public Result faceUpload(@RequestBody faceUploadDTO faceUploadDTO) throws IOException {
+    if (faceUploadDTO != null) {
+      Student student = new Student();
+      student.setId(faceUploadDTO.getId());
+      student.setFace(faceUploadDTO.getFace());
+      Boolean isUpload = iStudentService.uploadFace(student);
+      return Result.success(isUpload);
     }
+
+    return Result.error(Constants.CODE_600, "请选择图片");
+  }
+
+  @PostMapping("/distance")
+  public Result distance(@RequestBody DistanceDTO distanceDTO){
+    double distance = DistanceUtils.isInCircle(distanceDTO.getLon1(), distanceDTO.getLat1(), distanceDTO.getLon2(), distanceDTO.getLat2());
+    return Result.success(distance);
+  }
 }

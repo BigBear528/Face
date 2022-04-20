@@ -4,6 +4,9 @@ spring:
     password: 1234567800
     url: jdbc:mysql://47.109.34.96:3306/face?serverTimezone=UTC&userUnicode=true&characterEncoding=utf-8
     driver-class-name: com.mysql.cj.jdbc.Driver
+  servlt:
+    multipart:
+      max-file-size :10MB
 
 
 # 整合mybatis
@@ -20,6 +23,10 @@ mybatis-plus:
 
 server:
   port: 9000
+
+files:
+  upload:
+    path: /Users/bigbear/Desktop/files/
 
 
 
