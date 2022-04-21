@@ -8,13 +8,9 @@ import com.face.pojo.Student;
 import com.face.service.IStudentService;
 import com.face.utils.DistanceUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 @RestController
 @RequestMapping("/student")
@@ -36,7 +32,7 @@ public class StudentController {
     return Result.success(studentDTO);
   }
 
-  @PostMapping("changePassword")
+  @PostMapping("/changePassword")
   public Result changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
     String id = changePasswordDTO.getId();
     String currentPassword = changePasswordDTO.getCurrentPassword();
@@ -67,5 +63,19 @@ public class StudentController {
   public Result distance(@RequestBody DistanceDTO distanceDTO){
     double distance = DistanceUtils.isInCircle(distanceDTO.getLon1(), distanceDTO.getLat1(), distanceDTO.getLon2(), distanceDTO.getLat2());
     return Result.success(distance);
+  }
+
+  @PostMapping("/faceUploadSuccess")
+  public Result faceUploadSuccess(@RequestBody faceUploadSuccessDTO faceUploadSuccessDTO){
+
+    if (faceUploadSuccessDTO != null) {
+      Student student = new Student();
+      student.setId(faceUploadSuccessDTO.getId());
+      student.setImg(faceUploadSuccessDTO.getStatus());
+      Boolean isUpload =  iStudentService.faceUploadSuccess(student);
+      return Result.success(isUpload);
+    }
+
+    return Result.error(Constants.CODE_600, "请上传人脸");
   }
 }

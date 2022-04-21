@@ -12,4 +12,5 @@ public class Student {
   private String password;
   private int gender;
   private String face;
+  private int img;
 }

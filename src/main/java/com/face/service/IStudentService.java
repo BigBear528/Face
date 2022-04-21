@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.face.controller.dto.ChangePasswordDTO;
 import com.face.controller.dto.LoginDTO;
 import com.face.controller.dto.StudentDTO;
+import com.face.controller.dto.faceUploadSuccessDTO;
 import com.face.pojo.Student;
 
 public interface IStudentService extends IService<Student> {
@@ -15,4 +16,5 @@ public interface IStudentService extends IService<Student> {
 
   Boolean uploadFace(Student student);
 
+    Boolean faceUploadSuccess( Student student);
 }

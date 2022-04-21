@@ -9,6 +9,7 @@ import com.face.common.Constants;
 import com.face.controller.dto.ChangePasswordDTO;
 import com.face.controller.dto.LoginDTO;
 import com.face.controller.dto.StudentDTO;
+import com.face.controller.dto.faceUploadSuccessDTO;
 import com.face.exception.ServiceException;
 import com.face.mapper.StudentMapper;
 import com.face.pojo.Student;
@@ -94,5 +95,27 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
       throw new ServiceException(Constants.CODE_600,"上传失败");
     }
   }
+
+  @Override
+  public Boolean faceUploadSuccess(Student student) {
+    QueryWrapper<Student> queryWrapper = new QueryWrapper<>();
+    queryWrapper.eq("id", student.getId());
+    Student s;
+    try {
+      s = getOne(queryWrapper); // 从数据库查询用户信息
+      if(s != null){
+        UpdateWrapper<Student> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id",student.getId()).set("img",student.getImg());
+        boolean isUpdate = update(updateWrapper);
+        return isUpdate;
+      }else {
+        throw new ServiceException(Constants.CODE_600,"上传失败");
+      }
+    } catch (Exception e) {
+      LOG.error(e);
+      throw new ServiceException(Constants.CODE_600,"上传失败");
+    }
+  }
+
 
 }

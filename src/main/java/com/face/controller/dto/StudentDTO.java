@@ -10,4 +10,5 @@ public class StudentDTO {
   private int gender;
   private String face;
   private String token;
+  private int img;
 }
