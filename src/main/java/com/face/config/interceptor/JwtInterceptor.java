@@ -10,8 +10,10 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.face.common.Constants;
 import com.face.exception.ServiceException;
 import com.face.pojo.Student;
+import com.face.pojo.Teacher;
 import com.face.pojo.User;
 import com.face.service.IStudentService;
+import com.face.service.ITeacherService;
 import com.face.service.impl.StudentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
@@ -24,6 +26,9 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Autowired
     private IStudentService studentService;
+
+    @Autowired
+    private ITeacherService teacherService;
 
 
     @Override
@@ -48,19 +53,40 @@ public class JwtInterceptor implements HandlerInterceptor {
             throw new ServiceException(Constants.CODE_401, "token验证失败,请重新登录");
         }
 
-        // 根据token中的id在对应的数据库中查询
-        Student student = studentService.getById(id);
-        if (student == null) {
-            throw new ServiceException(Constants.CODE_401, "用户不存在,请重新登录");
+
+        // 判断查询的数据库
+        if (id.charAt(0) == 's') {
+            // 根据token中的id在对应的数据库中查询
+            Student student = studentService.getById(id);
+            if (student == null) {
+                throw new ServiceException(Constants.CODE_401, "用户不存在,请重新登录");
+            }
+
+            // 用户密码加签验证 token
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(student.getPassword())).build();
+            try {
+                jwtVerifier.verify(token); // 验证token
+            } catch (JWTVerificationException e) {
+                throw new ServiceException(Constants.CODE_401, "token验证失败，请重新登录");
+            }
         }
 
-        // 用户密码加签验证 token
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(student.getPassword())).build();
-        try {
-            jwtVerifier.verify(token); // 验证token
-        } catch (JWTVerificationException e) {
-            throw new ServiceException(Constants.CODE_401, "token验证失败，请重新登录");
+        if (id.charAt(0) == 't') {
+            // 根据token中的id在对应的数据库中查询
+            Teacher teacher = teacherService.getById(id);
+            if (teacher == null) {
+                throw new ServiceException(Constants.CODE_401, "用户不存在,请重新登录");
+            }
+
+            // 用户密码加签验证 token
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(teacher.getPassword())).build();
+            try {
+                jwtVerifier.verify(token); // 验证token
+            } catch (JWTVerificationException e) {
+                throw new ServiceException(Constants.CODE_401, "token验证失败，请重新登录");
+            }
         }
+
 
         return true;
     }

@@ -1,4 +1,47 @@
 package com.face.service.impl;
 
-public class TeacherServiceImpl {
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.log.Log;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.face.common.Constants;
+import com.face.controller.dto.LoginDTO;
+import com.face.controller.dto.TeacherDTO;
+import com.face.exception.ServiceException;
+import com.face.mapper.TeacherMapper;
+import com.face.pojo.Teacher;
+import com.face.service.ITeacherService;
+import com.face.utils.TokenUtils;
+import org.springframework.stereotype.Service;
+
+@Service
+public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> implements ITeacherService {
+
+    @Override
+    public TeacherDTO login(LoginDTO loginDTO) {
+
+        QueryWrapper<Teacher> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",loginDTO.getId());
+        queryWrapper.eq("password",loginDTO.getPassword());
+
+        Teacher teacher;
+
+        try {
+            teacher = getOne(queryWrapper);
+
+            if(teacher != null){
+                TeacherDTO teacherDTO = new TeacherDTO();
+                BeanUtil.copyProperties(teacher, teacherDTO, true);
+                String token = TokenUtils.genToken(teacher.getId(),teacher.getPassword());
+                teacherDTO.setToken(token);
+                return teacherDTO;
+            }else {
+                throw new ServiceException(Constants.CODE_600,"用户名或密码错误");
+            }
+
+        }catch (Exception e){
+            throw new ServiceException(Constants.CODE_500, "系统错误");
+        }
+    }
 }
+
