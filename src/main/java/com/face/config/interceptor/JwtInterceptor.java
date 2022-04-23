@@ -55,7 +55,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 
 
         // 判断查询的数据库
-        if (id.charAt(0) == 's') {
+        if (id.startsWith("s")) {
             // 根据token中的id在对应的数据库中查询
             Student student = studentService.getById(id);
             if (student == null) {
@@ -69,9 +69,10 @@ public class JwtInterceptor implements HandlerInterceptor {
             } catch (JWTVerificationException e) {
                 throw new ServiceException(Constants.CODE_401, "token验证失败，请重新登录");
             }
+            return true;
         }
 
-        if (id.charAt(0) == 't') {
+        if (id.startsWith("t")) {
             // 根据token中的id在对应的数据库中查询
             Teacher teacher = teacherService.getById(id);
             if (teacher == null) {
@@ -85,9 +86,11 @@ public class JwtInterceptor implements HandlerInterceptor {
             } catch (JWTVerificationException e) {
                 throw new ServiceException(Constants.CODE_401, "token验证失败，请重新登录");
             }
+
+            return true;
         }
 
 
-        return true;
+        return false;
     }
 }
