@@ -3,9 +3,9 @@ package com.face.controller.dto;
 import lombok.Data;
 
 @Data
-public class createClassDTO {
+public class GetClassDTO {
     private String name;
     private String tid;
-    private String code;
+    private int end;
     private int type;
 }
