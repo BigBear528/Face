@@ -99,7 +99,9 @@ public class StudentController {
             record.setAid(faceSuccessDTO.getAid());
             record.setSid(faceSuccessDTO.getSid());
             record.setTime(faceSuccessDTO.getTime());
-            iStudentService.faceSuccess(record);
+            Boolean isSuccess = iStudentService.faceSuccess(record);
+
+            return Result.success(isSuccess);
         }else {
             return Result.error(Constants.CODE_400, "参数错误");
         }
