@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/student")
@@ -77,5 +78,16 @@ public class StudentController {
     }
 
     return Result.error(Constants.CODE_600, "请上传人脸");
+  }
+
+  @PostMapping("/getAttendanceById")
+  public Result getAttendanceById(@RequestBody String sid){
+    if(!StrUtil.isEmptyIfStr(sid)){
+      List<StudentAttendanceDTO> list = iStudentService.getAttendanceById(sid);
+      return Result.success(list);
+    }else {
+      return Result.error(Constants.CODE_400,"参数错误");
+    }
+
   }
 }

@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
-@TableName("course")
-public class Course {
+@TableName("record")
+public class Record {
 
-    @TableId(value = "cid", type = IdType.AUTO)
-    private Integer cid;
+    @TableId(value = "aid", type = IdType.AUTO)
+    private Integer aid;
     private String sid;
+    private int status;
+    private int time;
 }

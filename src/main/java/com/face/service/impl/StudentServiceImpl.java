@@ -8,18 +8,36 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.face.common.Constants;
 import com.face.controller.dto.ChangePasswordDTO;
 import com.face.controller.dto.LoginDTO;
+import com.face.controller.dto.StudentAttendanceDTO;
 import com.face.controller.dto.StudentDTO;
-import com.face.controller.dto.faceUploadSuccessDTO;
 import com.face.exception.ServiceException;
-import com.face.mapper.StudentMapper;
-import com.face.pojo.Student;
+import com.face.mapper.*;
+import com.face.pojo.*;
+import com.face.pojo.Class;
 import com.face.service.IStudentService;
 import com.face.utils.TokenUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements IStudentService {
     private static final Log LOG = Log.get();
+
+    @Autowired
+    private RecordMapper recordMapper;
+
+    @Autowired
+    private AttendanceMapper attendanceMapper;
+
+
+    @Autowired
+    private ClassMapper classMapper;
+
+    @Autowired
+    private TeacherMapper teacherMapper;
 
     @Override
     public StudentDTO login(LoginDTO loginDTO) {
@@ -115,6 +133,60 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
             LOG.error(e);
             throw new ServiceException(Constants.CODE_600, "上传失败");
         }
+    }
+
+    @Override
+    public List<StudentAttendanceDTO> getAttendanceById(String sid) {
+        QueryWrapper<Record> recordQueryWrapper = new QueryWrapper<>();
+        recordQueryWrapper.eq("sid", sid);
+        recordQueryWrapper.eq("status", 0);
+        List<Record> recordList = recordMapper.selectList(recordQueryWrapper);
+
+        List<StudentAttendanceDTO> studentAttendanceDTOList = new ArrayList<>();
+
+        for (int i = 0; i < recordList.size(); i++) {
+            Record record = recordList.get(i);
+
+            // 创建一个对象
+            StudentAttendanceDTO studentAttendanceDTO = new StudentAttendanceDTO();
+
+            // 保存aid
+            studentAttendanceDTO.setAid(record.getAid());
+
+            // 根据aid获取attendance对象
+            QueryWrapper<Attendance> attendanceQueryWrapper = new QueryWrapper<>();
+            attendanceQueryWrapper.eq("aid", record.getAid());
+            Attendance attendance = attendanceMapper.selectOne(attendanceQueryWrapper);
+
+            // 保存数据到对象中
+            studentAttendanceDTO.setType(attendance.getType());
+            studentAttendanceDTO.setStartTime(attendance.getStartTime());
+            studentAttendanceDTO.setEndTime(attendance.getEndTime());
+            studentAttendanceDTO.setLat(attendance.getLat());
+            studentAttendanceDTO.setLon(attendance.getLon());
+            studentAttendanceDTO.setLocation(attendance.getLocation());
+
+            // 根据cid获取class对象
+            QueryWrapper<Class> classQueryWrapper = new QueryWrapper<>();
+            classQueryWrapper.eq("cid", attendance.getCid());
+            Class aClass = classMapper.selectOne(classQueryWrapper);
+
+            // 保存数据到对象中
+            studentAttendanceDTO.setClassName(aClass.getName());
+            studentAttendanceDTO.setCode(aClass.getCode());
+
+            // 根据tid获取teacher对象
+            QueryWrapper<Teacher> teacherQueryWrapper = new QueryWrapper<>();
+            teacherQueryWrapper.eq("id", aClass.getTid());
+            Teacher teacher = teacherMapper.selectOne(teacherQueryWrapper);
+
+            // 保存数据到对象中
+            studentAttendanceDTO.setTeacherName(teacher.getName());
+
+            studentAttendanceDTOList.add(studentAttendanceDTO);
+        }
+
+        return studentAttendanceDTOList;
     }
 
 
