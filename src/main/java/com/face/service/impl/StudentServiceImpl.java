@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.face.common.Constants;
-import com.face.controller.dto.ChangePasswordDTO;
-import com.face.controller.dto.LoginDTO;
-import com.face.controller.dto.StudentAttendanceDTO;
-import com.face.controller.dto.StudentDTO;
+import com.face.controller.dto.*;
 import com.face.exception.ServiceException;
 import com.face.mapper.*;
 import com.face.pojo.*;
@@ -38,6 +35,8 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
     @Autowired
     private TeacherMapper teacherMapper;
+
+
 
     @Override
     public StudentDTO login(LoginDTO loginDTO) {
@@ -188,6 +187,33 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         }
 
         return studentAttendanceDTOList;
+    }
+
+    @Override
+    public Boolean faceSuccess(Record record) {
+        QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("aid",record.getAid());
+        queryWrapper.eq("sid",record.getSid());
+        Record record1 = recordMapper.selectOne(queryWrapper);
+
+        if(record1!=null){
+            record1.setTime(record.getTime());
+            record1.setStatus(1);
+
+//            UpdateWrapper<Record> updateWrapper = new UpdateWrapper<>();
+//            updateWrapper.eq("aid",record.getAid()).eq("sid",record.getSid()).set("status",1).set("time",record.getTime());
+            int i = recordMapper.updateById(record1);
+            if(i>0){
+                return true;
+            }else {
+                return false;
+            }
+
+
+        }else {
+            return false;
+        }
+
     }
 
 
