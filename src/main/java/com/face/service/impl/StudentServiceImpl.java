@@ -165,6 +165,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
             studentAttendanceDTO.setLat(attendance.getLat());
             studentAttendanceDTO.setLon(attendance.getLon());
             studentAttendanceDTO.setLocation(attendance.getLocation());
+            studentAttendanceDTO.setRadius(attendance.getRadius());
 
             // 根据cid获取class对象
             QueryWrapper<Class> classQueryWrapper = new QueryWrapper<>();

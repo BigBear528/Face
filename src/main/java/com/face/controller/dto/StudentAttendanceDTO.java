@@ -15,4 +15,5 @@ public class StudentAttendanceDTO {
     private double lat;
     private  double lon;
     private String location;
+    private double radius;
 }
