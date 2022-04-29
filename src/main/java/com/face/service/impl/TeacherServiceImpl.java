@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.face.common.Constants;
-import com.face.controller.dto.ChangePasswordDTO;
-import com.face.controller.dto.LeaveRecordDTO;
-import com.face.controller.dto.LoginDTO;
-import com.face.controller.dto.TeacherDTO;
+import com.face.controller.dto.*;
 import com.face.exception.ServiceException;
 import com.face.mapper.*;
 import com.face.pojo.*;
@@ -147,6 +144,28 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         return list;
 
 
+    }
+
+    @Override
+    public Boolean approveApplication(ApplicationDTO applicationDTO) {
+        QueryWrapper<Record> recordQueryWrapper = new QueryWrapper<>();
+        recordQueryWrapper.eq("aid",applicationDTO.getAid());
+        recordQueryWrapper.eq("sid",applicationDTO.getSid());
+
+        Record record = recordMapper.selectOne(recordQueryWrapper);
+        if(record!=null){
+           record.setTeacherReason(applicationDTO.getReason());
+            UpdateWrapper<Record> recordUpdateWrapper = new UpdateWrapper<>();
+            recordUpdateWrapper.eq("aid", applicationDTO.getAid()).eq("sid",applicationDTO.getSid()).set("status", applicationDTO.getStatus()).set("teacherReason",applicationDTO.getReason());
+//            boolean update = update(recordUpdateWrapper);
+            int i = recordMapper.update(null, recordUpdateWrapper);
+            if(i>0){
+                return true;
+            }
+
+        }
+
+        return false;
     }
 }
 

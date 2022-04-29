@@ -67,8 +67,21 @@ public class TeacherController {
     public Result getLeaveListById(@RequestBody int cid){
         List<LeaveRecordDTO> list = iTeacherService.getLeaveListById(cid);
         return Result.success(list);
+    }
+
+    @PostMapping("/approveApplication")
+    public Result approveApplication(@RequestBody ApplicationDTO applicationDTO){
+        if (applicationDTO!=null){
+            Boolean aBoolean = iTeacherService.approveApplication(applicationDTO);
+            return Result.success(aBoolean);
+        }else {
+            return Result.error(Constants.CODE_400,"参数错误");
+        }
 
     }
 
-
+    @PostMapping("/refuseApplication")
+    public Result refuseApplication(){
+        return null;
+    }
 }

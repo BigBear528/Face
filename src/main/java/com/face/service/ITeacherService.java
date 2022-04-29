@@ -1,10 +1,7 @@
 package com.face.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.face.controller.dto.ChangePasswordDTO;
-import com.face.controller.dto.LeaveRecordDTO;
-import com.face.controller.dto.LoginDTO;
-import com.face.controller.dto.TeacherDTO;
+import com.face.controller.dto.*;
 import com.face.pojo.Record;
 import com.face.pojo.Teacher;
 
@@ -18,4 +15,6 @@ public interface ITeacherService extends IService<Teacher> {
     Boolean uploadFace(Teacher teacher);
 
     List<LeaveRecordDTO>getLeaveListById(int cid);
+
+    Boolean approveApplication(ApplicationDTO applicationDTO);
 }

@@ -15,4 +15,5 @@ public class Record {
     private int status;
     private int time;
     private String reason;
+    private String teacherReason;
 }
