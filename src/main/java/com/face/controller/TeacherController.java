@@ -77,11 +77,5 @@ public class TeacherController {
         }else {
             return Result.error(Constants.CODE_400,"参数错误");
         }
-
-    }
-
-    @PostMapping("/refuseApplication")
-    public Result refuseApplication(){
-        return null;
     }
 }

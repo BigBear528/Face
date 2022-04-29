@@ -157,7 +157,6 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
            record.setTeacherReason(applicationDTO.getReason());
             UpdateWrapper<Record> recordUpdateWrapper = new UpdateWrapper<>();
             recordUpdateWrapper.eq("aid", applicationDTO.getAid()).eq("sid",applicationDTO.getSid()).set("status", applicationDTO.getStatus()).set("teacherReason",applicationDTO.getReason());
-//            boolean update = update(recordUpdateWrapper);
             int i = recordMapper.update(null, recordUpdateWrapper);
             if(i>0){
                 return true;
