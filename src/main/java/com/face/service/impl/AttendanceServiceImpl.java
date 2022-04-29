@@ -51,16 +51,14 @@ public class AttendanceServiceImpl extends ServiceImpl<AttendanceMapper, Attenda
 
         List<Course> courseList = courseMapper.selectList(queryWrapperCourse);
 
+
         for (int i = 0; i < courseList.size(); i++) {
             Course course = courseList.get(i);
-
             Record record = new Record();
             record.setAid(attendance.getAid());
             record.setSid(course.getSid());
-
             recordMapper.insert(record);
         }
-
 
         if (insert > 0) {
             return true;

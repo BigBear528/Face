@@ -216,5 +216,60 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
     }
 
+    @Override
+    public List<StudentAttendanceDTO> getExpiredList(String sid)  {
+        QueryWrapper<Record> recordQueryWrapper = new QueryWrapper<>();
+        recordQueryWrapper.eq("sid", sid);
+        recordQueryWrapper.eq("status", 1);
+        List<Record> recordList = recordMapper.selectList(recordQueryWrapper);
+
+        List<StudentAttendanceDTO> studentAttendanceDTOList = new ArrayList<>();
+
+        for (int i = 0; i < recordList.size(); i++) {
+            Record record = recordList.get(i);
+
+            // 创建一个对象
+            StudentAttendanceDTO studentAttendanceDTO = new StudentAttendanceDTO();
+
+            // 保存aid
+            studentAttendanceDTO.setAid(record.getAid());
+
+            // 根据aid获取attendance对象
+            QueryWrapper<Attendance> attendanceQueryWrapper = new QueryWrapper<>();
+            attendanceQueryWrapper.eq("aid", record.getAid());
+            Attendance attendance = attendanceMapper.selectOne(attendanceQueryWrapper);
+
+            // 保存数据到对象中
+            studentAttendanceDTO.setType(attendance.getType());
+            studentAttendanceDTO.setStartTime(attendance.getStartTime());
+            studentAttendanceDTO.setEndTime(attendance.getEndTime());
+            studentAttendanceDTO.setLat(attendance.getLat());
+            studentAttendanceDTO.setLon(attendance.getLon());
+            studentAttendanceDTO.setLocation(attendance.getLocation());
+            studentAttendanceDTO.setRadius(attendance.getRadius());
+
+            // 根据cid获取class对象
+            QueryWrapper<Class> classQueryWrapper = new QueryWrapper<>();
+            classQueryWrapper.eq("cid", attendance.getCid());
+            Class aClass = classMapper.selectOne(classQueryWrapper);
+
+            // 保存数据到对象中
+            studentAttendanceDTO.setClassName(aClass.getName());
+            studentAttendanceDTO.setCode(aClass.getCode());
+
+            // 根据tid获取teacher对象
+            QueryWrapper<Teacher> teacherQueryWrapper = new QueryWrapper<>();
+            teacherQueryWrapper.eq("id", aClass.getTid());
+            Teacher teacher = teacherMapper.selectOne(teacherQueryWrapper);
+
+            // 保存数据到对象中
+            studentAttendanceDTO.setTeacherName(teacher.getName());
+
+            studentAttendanceDTOList.add(studentAttendanceDTO);
+        }
+
+        return studentAttendanceDTOList;
+    }
+
 
 }

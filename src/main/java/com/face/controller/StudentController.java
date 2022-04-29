@@ -92,6 +92,17 @@ public class StudentController {
         }
     }
 
+
+    @PostMapping("/getExpiredList")
+    public Result getExpiredList(@RequestBody String sid) {
+        if (!StrUtil.isEmptyIfStr(sid)) {
+            List<StudentAttendanceDTO> list = iStudentService.getExpiredList(sid);
+            return Result.success(list);
+        } else {
+            return Result.error(Constants.CODE_400, "参数错误");
+        }
+    }
+
     @PostMapping("/faceSuccess")
     public Result faceSuccess(@RequestBody faceSuccessDTO faceSuccessDTO) {
         if(faceSuccessDTO!=null){
