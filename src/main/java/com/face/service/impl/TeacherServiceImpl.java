@@ -1,24 +1,39 @@
 package com.face.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.face.common.Constants;
 import com.face.controller.dto.ChangePasswordDTO;
+import com.face.controller.dto.LeaveRecordDTO;
 import com.face.controller.dto.LoginDTO;
 import com.face.controller.dto.TeacherDTO;
 import com.face.exception.ServiceException;
-import com.face.mapper.TeacherMapper;
-import com.face.pojo.Student;
-import com.face.pojo.Teacher;
+import com.face.mapper.*;
+import com.face.pojo.*;
+import com.face.pojo.Class;
 import com.face.service.ITeacherService;
 import com.face.utils.TokenUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> implements ITeacherService {
+
+    @Autowired
+    private AttendanceMapper attendanceMapper;
+
+    @Autowired
+    private RecordMapper recordMapper;
+
+
+    @Autowired
+    private StudentMapper studentMapper;
+
 
     @Override
     public TeacherDTO login(LoginDTO loginDTO) {
@@ -91,6 +106,47 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         } catch (Exception e) {
             throw new ServiceException(Constants.CODE_600, "上传失败");
         }
+    }
+
+    @Override
+    public List<LeaveRecordDTO> getLeaveListById(int cid) {
+        QueryWrapper<Attendance> attendanceQueryWrapper = new QueryWrapper<>();
+        attendanceQueryWrapper.eq("cid", cid);
+        List<Attendance> attendanceList = attendanceMapper.selectList(attendanceQueryWrapper);
+
+        List<LeaveRecordDTO> list = new ArrayList<>();
+
+        for (int i = 0; i < attendanceList.size(); i++) {
+            Attendance attendance = attendanceList.get(i);
+
+            QueryWrapper<Record> recordQueryWrapper = new QueryWrapper<>();
+            recordQueryWrapper.eq("aid", attendance.getAid());
+            recordQueryWrapper.eq("status", 2);
+            List<Record> recordList = recordMapper.selectList(recordQueryWrapper);
+
+            for (int j = 0; j < recordList.size(); j++) {
+                Record record = recordList.get(j);
+                LeaveRecordDTO leaveRecordDTO = new LeaveRecordDTO();
+                leaveRecordDTO.setAid(record.getAid());
+                leaveRecordDTO.setSid(record.getSid());
+                leaveRecordDTO.setReason(record.getReason());
+                leaveRecordDTO.setStatus(record.getStatus());
+                leaveRecordDTO.setTime(record.getTime());
+
+                QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
+                studentQueryWrapper.eq("id",record.getSid());
+
+                Student student = studentMapper.selectOne(studentQueryWrapper);
+                leaveRecordDTO.setStudentName(student.getName());
+
+                list.add(leaveRecordDTO);
+            }
+
+        }
+
+        return list;
+
+
     }
 }
 

@@ -3,10 +3,8 @@ package com.face.controller;
 import cn.hutool.core.util.StrUtil;
 import com.face.common.Constants;
 import com.face.common.Result;
-import com.face.controller.dto.ChangePasswordDTO;
-import com.face.controller.dto.LoginDTO;
-import com.face.controller.dto.TeacherDTO;
-import com.face.controller.dto.faceUploadDTO;
+import com.face.controller.dto.*;
+import com.face.pojo.Record;
 import com.face.pojo.Teacher;
 import com.face.service.ITeacherService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/teacher")
@@ -62,6 +61,13 @@ public class TeacherController {
         }
 
         return Result.error(Constants.CODE_600, "请选择图片");
+    }
+
+    @PostMapping("/getLeaveListById")
+    public Result getLeaveListById(@RequestBody int cid){
+        List<LeaveRecordDTO> list = iTeacherService.getLeaveListById(cid);
+        return Result.success(list);
+
     }
 
 
