@@ -69,10 +69,10 @@ public class TeacherController {
         return Result.success(list);
     }
 
-    @PostMapping("/approveApplication")
-    public Result approveApplication(@RequestBody ApplicationDTO applicationDTO){
+    @PostMapping("/approvalApplication")
+    public Result approvalApplication(@RequestBody ApplicationDTO applicationDTO){
         if (applicationDTO!=null){
-            Boolean aBoolean = iTeacherService.approveApplication(applicationDTO);
+            Boolean aBoolean = iTeacherService.approvalApplication(applicationDTO);
             return Result.success(aBoolean);
         }else {
             return Result.error(Constants.CODE_400,"参数错误");

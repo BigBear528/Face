@@ -147,7 +147,7 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
     }
 
     @Override
-    public Boolean approveApplication(ApplicationDTO applicationDTO) {
+    public Boolean approvalApplication(ApplicationDTO applicationDTO) {
         QueryWrapper<Record> recordQueryWrapper = new QueryWrapper<>();
         recordQueryWrapper.eq("aid",applicationDTO.getAid());
         recordQueryWrapper.eq("sid",applicationDTO.getSid());

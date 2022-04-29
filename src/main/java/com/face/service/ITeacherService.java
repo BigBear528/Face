@@ -16,5 +16,5 @@ public interface ITeacherService extends IService<Teacher> {
 
     List<LeaveRecordDTO>getLeaveListById(int cid);
 
-    Boolean approveApplication(ApplicationDTO applicationDTO);
+    Boolean approvalApplication(ApplicationDTO applicationDTO);
 }
