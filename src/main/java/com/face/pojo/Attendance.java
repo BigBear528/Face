@@ -9,7 +9,7 @@ import lombok.Data;
 @TableName("attendance")
 public class Attendance {
     @TableId(value = "aid", type = IdType.AUTO)
-    private int aid;
+    private Integer aid;
     private int cid;
     private int startTime;
     private int endTime;

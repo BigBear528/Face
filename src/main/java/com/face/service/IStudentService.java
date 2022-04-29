@@ -23,4 +23,6 @@ public interface IStudentService extends IService<Student> {
     Boolean faceSuccess(Record record);
 
     List<StudentAttendanceDTO> getExpiredList(String sid);
+
+    Boolean leaveApplication(Record record);
 }

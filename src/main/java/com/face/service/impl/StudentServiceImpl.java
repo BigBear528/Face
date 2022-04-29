@@ -37,7 +37,6 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     private TeacherMapper teacherMapper;
 
 
-
     @Override
     public StudentDTO login(LoginDTO loginDTO) {
         QueryWrapper<Student> queryWrapper = new QueryWrapper<>();
@@ -192,32 +191,32 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public Boolean faceSuccess(Record record) {
         QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("aid",record.getAid());
-        queryWrapper.eq("sid",record.getSid());
+        queryWrapper.eq("aid", record.getAid());
+        queryWrapper.eq("sid", record.getSid());
         Record record1 = recordMapper.selectOne(queryWrapper);
 
-        if(record1!=null){
+        if (record1 != null) {
             record1.setTime(record.getTime());
             record1.setStatus(1);
 
 //            UpdateWrapper<Record> updateWrapper = new UpdateWrapper<>();
 //            updateWrapper.eq("aid",record.getAid()).eq("sid",record.getSid()).set("status",1).set("time",record.getTime());
             int i = recordMapper.updateById(record1);
-            if(i>0){
+            if (i > 0) {
                 return true;
-            }else {
+            } else {
                 return false;
             }
 
 
-        }else {
+        } else {
             return false;
         }
 
     }
 
     @Override
-    public List<StudentAttendanceDTO> getExpiredList(String sid)  {
+    public List<StudentAttendanceDTO> getExpiredList(String sid) {
         QueryWrapper<Record> recordQueryWrapper = new QueryWrapper<>();
         recordQueryWrapper.eq("sid", sid);
         recordQueryWrapper.eq("status", 1);
@@ -269,6 +268,37 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         }
 
         return studentAttendanceDTOList;
+    }
+
+    @Override
+    public Boolean leaveApplication(Record record) {
+
+        System.out.println("++++++++++++");
+        System.out.println(record);
+        QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("aid", record.getAid());
+        queryWrapper.eq("sid", record.getSid());
+        Record record1 = recordMapper.selectOne(queryWrapper);
+
+
+        if (record1 != null) {
+            record1.setTime(record.getTime());
+            record1.setStatus(2);
+            record1.setReason(record.getReason());
+
+//            UpdateWrapper<Record> updateWrapper = new UpdateWrapper<>();
+//            updateWrapper.eq("aid",record.getAid()).eq("sid",record.getSid()).set("status",1).set("time",record.getTime());
+            int i = recordMapper.updateById(record1);
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+
+
+        } else {
+            return false;
+        }
     }
 
 

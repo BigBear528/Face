@@ -118,4 +118,20 @@ public class StudentController {
         }
 
     }
+
+    @PostMapping("/leaveApplication")
+    public Result leaveApplication(@RequestBody LeaveApplicationDTO leaveApplicationDTO){
+
+        if(leaveApplicationDTO!=null){
+            Record record = new Record();
+            record.setAid(leaveApplicationDTO.getAid());
+            record.setSid(leaveApplicationDTO.getSid());
+            record.setTime(leaveApplicationDTO.getTime());
+            record.setReason(leaveApplicationDTO.getReason());
+            Boolean isSuccess = iStudentService.leaveApplication(record);
+            return Result.success(isSuccess);
+        }else {
+            return Result.error(Constants.CODE_400, "参数错误");
+        }
+    }
 }

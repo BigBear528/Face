@@ -14,4 +14,5 @@ public class Record {
     private String sid;
     private int status;
     private int time;
+    private String reason;
 }
