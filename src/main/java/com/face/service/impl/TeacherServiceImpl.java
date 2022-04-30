@@ -173,7 +173,8 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         attendanceQueryWrapper.eq("cid", cid);
         List<Attendance> attendanceList = attendanceMapper.selectList(attendanceQueryWrapper);
 
-        List<Long> totalNumberList = new ArrayList<>();
+//        List<Long> totalNumberList = new ArrayList<>();
+        List<Integer> countNumberList = new ArrayList<>();
         List<Long> completedNumberList = new ArrayList<>();
         List<Long> leaveNumberList = new ArrayList<>();
         List<Long> immatureNumberList = new ArrayList<>();
@@ -199,9 +200,10 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
 
             Long immatureNumber = totalNumber - completedNumber - leaveNumber;
 
-            double attendanceRate = (double)completedNumber / totalNumber;
+            double attendanceRate = (double) completedNumber / totalNumber * 100;
 
-            totalNumberList.add(totalNumber);
+//            totalNumberList.add(totalNumber);
+            countNumberList.add(i + 1);
             completedNumberList.add(completedNumber);
             leaveNumberList.add(leaveNumber);
             immatureNumberList.add(immatureNumber);
@@ -210,14 +212,14 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
 
         ChartDataDTO chartData = new ChartDataDTO();
 
-        chartData.setTotalNumberList(totalNumberList);
+//        chartData.setTotalNumberList(totalNumberList);
+        chartData.setCountNumberList(countNumberList);
         chartData.setCompletedNumberList(completedNumberList);
         chartData.setLeaveNumberList(leaveNumberList);
         chartData.setImmatureNumberList(immatureNumberList);
         chartData.setAttendanceRateList(attendanceRateList);
 
         return chartData;
-
 
 
     }

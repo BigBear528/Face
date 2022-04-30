@@ -8,7 +8,8 @@ import java.util.List;
 @Data
 public class ChartDataDTO {
 
-    private List<Long> totalNumberList;
+//    private List<Long> totalNumberList;
+    private List<Integer> countNumberList;
     private List<Long> completedNumberList;
     private List<Long> leaveNumberList;
     private List<Long> immatureNumberList;
