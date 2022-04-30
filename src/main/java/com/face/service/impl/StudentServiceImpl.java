@@ -273,8 +273,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public Boolean leaveApplication(Record record) {
 
-        System.out.println("++++++++++++");
-        System.out.println(record);
+
         QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("aid", record.getAid());
         queryWrapper.eq("sid", record.getSid());
@@ -282,13 +281,18 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
 
         if (record1 != null) {
-            record1.setTime(record.getTime());
-            record1.setStatus(2);
-            record1.setReason(record.getReason());
+//            record1.setTime(record.getTime());
+//            record1.setStatus(2);
+//            record1.setReason(record.getReason());
 
-//            UpdateWrapper<Record> updateWrapper = new UpdateWrapper<>();
-//            updateWrapper.eq("aid",record.getAid()).eq("sid",record.getSid()).set("status",1).set("time",record.getTime());
-            int i = recordMapper.updateById(record1);
+            UpdateWrapper<Record> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("aid",record.getAid())
+                    .eq("sid",record.getSid())
+                    .set("status",2)
+                    .set("time",record.getTime())
+                    .set("reason",record.getReason());
+//            int i = recordMapper.updateById(record1);
+            int i = recordMapper.update(null, updateWrapper);
             if (i > 0) {
                 return true;
             } else {
