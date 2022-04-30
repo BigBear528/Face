@@ -4,7 +4,6 @@ import cn.hutool.core.util.StrUtil;
 import com.face.common.Constants;
 import com.face.common.Result;
 import com.face.controller.dto.*;
-import com.face.pojo.Record;
 import com.face.pojo.Teacher;
 import com.face.service.ITeacherService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -77,5 +77,12 @@ public class TeacherController {
         }else {
             return Result.error(Constants.CODE_400,"参数错误");
         }
+    }
+
+    @PostMapping("/getChartData")
+    public Result getChartData(@RequestBody int cid){
+
+        ChartDataDTO chartData = iTeacherService.getChartData(cid);
+        return Result.success(chartData);
     }
 }

@@ -29,6 +29,5 @@ public class CourseController {
         }else {
             return Result.error(Constants.CODE_400,"参数错误");
         }
-
     }
 }

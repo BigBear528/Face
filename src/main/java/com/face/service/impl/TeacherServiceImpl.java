@@ -131,7 +131,7 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
                 leaveRecordDTO.setTime(record.getTime());
 
                 QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
-                studentQueryWrapper.eq("id",record.getSid());
+                studentQueryWrapper.eq("id", record.getSid());
 
                 Student student = studentMapper.selectOne(studentQueryWrapper);
                 leaveRecordDTO.setStudentName(student.getName());
@@ -149,22 +149,77 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
     @Override
     public Boolean approvalApplication(ApplicationDTO applicationDTO) {
         QueryWrapper<Record> recordQueryWrapper = new QueryWrapper<>();
-        recordQueryWrapper.eq("aid",applicationDTO.getAid());
-        recordQueryWrapper.eq("sid",applicationDTO.getSid());
+        recordQueryWrapper.eq("aid", applicationDTO.getAid());
+        recordQueryWrapper.eq("sid", applicationDTO.getSid());
 
         Record record = recordMapper.selectOne(recordQueryWrapper);
-        if(record!=null){
-           record.setTeacherReason(applicationDTO.getReason());
+        if (record != null) {
+            record.setTeacherReason(applicationDTO.getReason());
             UpdateWrapper<Record> recordUpdateWrapper = new UpdateWrapper<>();
-            recordUpdateWrapper.eq("aid", applicationDTO.getAid()).eq("sid",applicationDTO.getSid()).set("status", applicationDTO.getStatus()).set("teacherReason",applicationDTO.getReason());
+            recordUpdateWrapper.eq("aid", applicationDTO.getAid()).eq("sid", applicationDTO.getSid()).set("status", applicationDTO.getStatus()).set("teacherReason", applicationDTO.getReason());
             int i = recordMapper.update(null, recordUpdateWrapper);
-            if(i>0){
+            if (i > 0) {
                 return true;
             }
 
         }
 
         return false;
+    }
+
+    @Override
+    public ChartDataDTO getChartData(int cid) {
+        QueryWrapper<Attendance> attendanceQueryWrapper = new QueryWrapper<>();
+        attendanceQueryWrapper.eq("cid", cid);
+        List<Attendance> attendanceList = attendanceMapper.selectList(attendanceQueryWrapper);
+
+        List<Long> totalNumberList = new ArrayList<>();
+        List<Long> completedNumberList = new ArrayList<>();
+        List<Long> leaveNumberList = new ArrayList<>();
+        List<Long> immatureNumberList = new ArrayList<>();
+        List<Double> attendanceRateList = new ArrayList<>();
+
+        for (int i = 0; i < attendanceList.size(); i++) {
+            Attendance attendance = attendanceList.get(i);
+
+            QueryWrapper<Record> recordQueryWrapper = new QueryWrapper<>();
+            recordQueryWrapper.eq("aid", attendance.getAid());
+            Long totalNumber = recordMapper.selectCount(recordQueryWrapper);
+
+
+            QueryWrapper<Record> recordQueryWrapper2 = new QueryWrapper<>();
+            recordQueryWrapper2.eq("aid", attendance.getAid());
+            recordQueryWrapper2.eq("status", 1);
+            Long completedNumber = recordMapper.selectCount(recordQueryWrapper2);
+
+            QueryWrapper<Record> recordQueryWrapper3 = new QueryWrapper<>();
+            recordQueryWrapper3.eq("aid", attendance.getAid());
+            recordQueryWrapper3.eq("status", 3);
+            Long leaveNumber = recordMapper.selectCount(recordQueryWrapper3);
+
+            Long immatureNumber = totalNumber - completedNumber - leaveNumber;
+
+            double attendanceRate = (double)completedNumber / totalNumber;
+
+            totalNumberList.add(totalNumber);
+            completedNumberList.add(completedNumber);
+            leaveNumberList.add(leaveNumber);
+            immatureNumberList.add(immatureNumber);
+            attendanceRateList.add(attendanceRate);
+        }
+
+        ChartDataDTO chartData = new ChartDataDTO();
+
+        chartData.setTotalNumberList(totalNumberList);
+        chartData.setCompletedNumberList(completedNumberList);
+        chartData.setLeaveNumberList(leaveNumberList);
+        chartData.setImmatureNumberList(immatureNumberList);
+        chartData.setAttendanceRateList(attendanceRateList);
+
+        return chartData;
+
+
+
     }
 }
 

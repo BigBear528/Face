@@ -17,4 +17,6 @@ public interface ITeacherService extends IService<Teacher> {
     List<LeaveRecordDTO>getLeaveListById(int cid);
 
     Boolean approvalApplication(ApplicationDTO applicationDTO);
+
+    ChartDataDTO getChartData(int cid);
 }

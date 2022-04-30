@@ -207,8 +207,6 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
             } else {
                 return false;
             }
-
-
         } else {
             return false;
         }
@@ -298,8 +296,6 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
             } else {
                 return false;
             }
-
-
         } else {
             return false;
         }
