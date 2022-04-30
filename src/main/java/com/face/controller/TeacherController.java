@@ -36,7 +36,7 @@ public class TeacherController {
     }
 
     @PostMapping("/changePassword")
-    public Result changePassword(@RequestBody ChangePasswordDTO changePasswordDTO){
+    public Result changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
         String id = changePasswordDTO.getId();
         String currentPassword = changePasswordDTO.getCurrentPassword();
         String newPassword = changePasswordDTO.getNewPassword();
@@ -51,7 +51,7 @@ public class TeacherController {
 
 
     @PostMapping("/faceUpload")
-    public Result faceUpload(@RequestBody faceUploadDTO faceUploadDTO){
+    public Result faceUpload(@RequestBody faceUploadDTO faceUploadDTO) {
         if (faceUploadDTO != null) {
             Teacher teacher = new Teacher();
             teacher.setId(faceUploadDTO.getId());
@@ -64,25 +64,30 @@ public class TeacherController {
     }
 
     @PostMapping("/getLeaveListById")
-    public Result getLeaveListById(@RequestBody int cid){
+    public Result getLeaveListById(@RequestBody int cid) {
         List<LeaveRecordDTO> list = iTeacherService.getLeaveListById(cid);
         return Result.success(list);
     }
 
     @PostMapping("/approvalApplication")
-    public Result approvalApplication(@RequestBody ApplicationDTO applicationDTO){
-        if (applicationDTO!=null){
+    public Result approvalApplication(@RequestBody ApplicationDTO applicationDTO) {
+        if (applicationDTO != null) {
             Boolean aBoolean = iTeacherService.approvalApplication(applicationDTO);
             return Result.success(aBoolean);
-        }else {
-            return Result.error(Constants.CODE_400,"参数错误");
+        } else {
+            return Result.error(Constants.CODE_400, "参数错误");
         }
     }
 
     @PostMapping("/getChartData")
-    public Result getChartData(@RequestBody int cid){
-
+    public Result getChartData(@RequestBody int cid) {
         ChartDataDTO chartData = iTeacherService.getChartData(cid);
         return Result.success(chartData);
+    }
+
+    @PostMapping("/getAttendanceSheet")
+    public Result getAttendanceSheet(@RequestBody int cid) {
+        List<AttendanceSheetDTO> attendanceSheet = iTeacherService.getAttendanceSheet(cid);
+        return Result.success(attendanceSheet);
     }
 }

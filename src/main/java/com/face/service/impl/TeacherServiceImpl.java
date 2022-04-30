@@ -173,7 +173,6 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         attendanceQueryWrapper.eq("cid", cid);
         List<Attendance> attendanceList = attendanceMapper.selectList(attendanceQueryWrapper);
 
-//        List<Long> totalNumberList = new ArrayList<>();
         List<Integer> countNumberList = new ArrayList<>();
         List<Long> completedNumberList = new ArrayList<>();
         List<Long> leaveNumberList = new ArrayList<>();
@@ -202,7 +201,6 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
 
             double attendanceRate = (double) completedNumber / totalNumber * 100;
 
-//            totalNumberList.add(totalNumber);
             countNumberList.add(i + 1);
             completedNumberList.add(completedNumber);
             leaveNumberList.add(leaveNumber);
@@ -212,7 +210,6 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
 
         ChartDataDTO chartData = new ChartDataDTO();
 
-//        chartData.setTotalNumberList(totalNumberList);
         chartData.setCountNumberList(countNumberList);
         chartData.setCompletedNumberList(completedNumberList);
         chartData.setLeaveNumberList(leaveNumberList);
@@ -222,6 +219,44 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         return chartData;
 
 
+    }
+
+    @Override
+    public  List<AttendanceSheetDTO> getAttendanceSheet(int cid) {
+
+        QueryWrapper<Attendance> attendanceQueryWrapper = new QueryWrapper<>();
+        attendanceQueryWrapper.eq("cid", cid);
+        List<Attendance> attendanceList = attendanceMapper.selectList(attendanceQueryWrapper);
+
+        List<AttendanceSheetDTO> AttendanceSheetList = new ArrayList<>();
+
+
+        for (int i = 0; i < attendanceList.size(); i++) {
+            Attendance attendance = attendanceList.get(i);
+
+            QueryWrapper<Record> recordQueryWrapper = new QueryWrapper<>();
+            recordQueryWrapper.eq("aid", attendance.getAid());
+            List<Record> recordList = recordMapper.selectList(recordQueryWrapper);
+
+            for (int j = 0; j < recordList.size(); j++) {
+                AttendanceSheetDTO attendanceSheet = new AttendanceSheetDTO();
+                Record record = recordList.get(j);
+
+                QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
+                studentQueryWrapper.eq("id",record.getSid());
+                Student student = studentMapper.selectOne(studentQueryWrapper);
+
+                attendanceSheet.setSid(record.getSid());
+                attendanceSheet.setStatus(record.getStatus());
+                attendanceSheet.setStartTime(attendance.getStartTime());
+                attendanceSheet.setEndTime(attendance.getEndTime());
+                attendanceSheet.setName(student.getName());
+
+                AttendanceSheetList.add(attendanceSheet);
+            }
+        }
+
+        return AttendanceSheetList;
     }
 }
 

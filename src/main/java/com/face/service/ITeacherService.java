@@ -19,4 +19,6 @@ public interface ITeacherService extends IService<Teacher> {
     Boolean approvalApplication(ApplicationDTO applicationDTO);
 
     ChartDataDTO getChartData(int cid);
+
+    List<AttendanceSheetDTO> getAttendanceSheet(int cid);
 }
