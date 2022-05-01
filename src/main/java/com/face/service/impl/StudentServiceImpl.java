@@ -306,7 +306,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     @Override
-    public  List<String> getSidListBy(int aid) {
+    public List<String> getSidListBy(int aid) {
         QueryWrapper<Record> recordQueryWrapper = new QueryWrapper<>();
         recordQueryWrapper.eq("aid", aid);
         List<Record> recordList = recordMapper.selectList(recordQueryWrapper);
@@ -319,6 +319,55 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         }
 
         return sidList;
+    }
+
+    @Override
+    public Boolean faceSuccessMulti(faceSuccessMultiDTO faceSuccessMultiDTO) {
+        for (int i = 0; i < faceSuccessMultiDTO.getSidList().length; i++) {
+            int aid = faceSuccessMultiDTO.getAid();
+            String sid = faceSuccessMultiDTO.getSidList()[i];
+            int time = faceSuccessMultiDTO.getTime();
+
+            QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("aid", aid);
+            queryWrapper.eq("sid", sid);
+            Record record1 = recordMapper.selectOne(queryWrapper);
+            if (record1 != null) {
+                UpdateWrapper<Record> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.eq("aid", aid)
+                        .eq("sid", sid)
+                        .set("status", 1)
+                        .set("time", time);
+                recordMapper.update(null, updateWrapper);
+            }
+        }
+
+        return true;
+
+//        QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("aid", record.getAid());
+//        queryWrapper.eq("sid", record.getSid());
+//        Record record1 = recordMapper.selectOne(queryWrapper);
+//
+//        if (record1 != null) {
+////            record1.setTime(record.getTime());
+////            record1.setStatus(1);
+//
+//            UpdateWrapper<Record> updateWrapper = new UpdateWrapper<>();
+//            updateWrapper.eq("aid", record.getAid())
+//                    .eq("sid", record.getSid())
+//                    .set("status", 1)
+//                    .set("time", record.getTime());
+////            int i = recordMapper.updateById(record1);
+//            int i = recordMapper.update(null, updateWrapper);
+//            if (i > 0) {
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        } else {
+//            return false;
+//        }
     }
 
 

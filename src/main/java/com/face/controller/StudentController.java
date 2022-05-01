@@ -143,4 +143,20 @@ public class StudentController {
         return Result.success(sidList);
 
     }
+
+    @PostMapping("/faceSuccessMulti")
+    public Result faceSuccessMulti(@RequestBody faceSuccessMultiDTO faceSuccessMultiDTO){
+        if (faceSuccessMultiDTO != null) {
+//            Record record = new Record();
+//            record.setAid(faceSuccessDTO.getAid());
+//            record.setSid(faceSuccessDTO.getSid());
+//            record.setTime(faceSuccessDTO.getTime());
+            Boolean isSuccess = iStudentService.faceSuccessMulti(faceSuccessMultiDTO);
+
+            return Result.success(isSuccess);
+        } else {
+            return Result.error(Constants.CODE_400, "参数错误");
+        }
+
+    }
 }

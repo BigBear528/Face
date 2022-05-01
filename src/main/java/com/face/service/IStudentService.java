@@ -27,4 +27,6 @@ public interface IStudentService extends IService<Student> {
     Boolean leaveApplication(Record record);
 
     List<String> getSidListBy(int aid);
+
+    Boolean faceSuccessMulti(faceSuccessMultiDTO faceSuccessMultiDTO);
 }
