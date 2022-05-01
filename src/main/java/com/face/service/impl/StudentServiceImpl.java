@@ -29,7 +29,6 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Autowired
     private AttendanceMapper attendanceMapper;
 
-
     @Autowired
     private ClassMapper classMapper;
 
@@ -38,6 +37,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
     @Autowired
     private CourseMapper courseMapper;
+
+    @Autowired
+    private MessageMapper messageMapper;
 
 
     @Override
@@ -374,6 +376,39 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         }
 
         return courseDTOList;
+
+    }
+
+    @Override
+    public  List<MessageDTO> getAllMessage(String sid) {
+        QueryWrapper<Message> messageQueryWrapper = new QueryWrapper<>();
+        messageQueryWrapper.eq("sid",sid).orderByDesc("time");
+        List<Message> messageList = messageMapper.selectList(messageQueryWrapper);
+
+        List<MessageDTO> messageDTOList = new ArrayList<>();
+
+        for (int i = 0;i<messageList.size();i++){
+            Message message = messageList.get(i);
+
+
+            QueryWrapper<Attendance> attendanceQueryWrapper = new QueryWrapper<>();
+            attendanceQueryWrapper.eq("aid",message.getAid());
+            Attendance attendance = attendanceMapper.selectOne(attendanceQueryWrapper);
+
+            QueryWrapper<Class> classQueryWrapper = new QueryWrapper<>();
+            classQueryWrapper.eq("cid",attendance.getCid());
+            Class aClass = classMapper.selectOne(classQueryWrapper);
+
+            MessageDTO messageDTO = new MessageDTO();
+            messageDTO.setName(aClass.getName());
+            messageDTO.setReason(message.getReason());
+            messageDTO.setTime(message.getTime());
+            messageDTO.setStatus(message.getStatus());
+
+            messageDTOList.add(messageDTO);
+        }
+
+        return messageDTOList;
 
     }
 

@@ -163,4 +163,11 @@ public class StudentController {
 
         return Result.success(allCourse);
     }
+
+    @PostMapping("/getAllMessage")
+    public Result getAllMessage(@RequestBody String sid){
+        List<MessageDTO> allMessage = iStudentService.getAllMessage(sid);
+        return Result.success(allMessage);
+
+    }
 }

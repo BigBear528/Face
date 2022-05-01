@@ -31,4 +31,6 @@ public interface IStudentService extends IService<Student> {
     Boolean faceSuccessMulti(faceSuccessMultiDTO faceSuccessMultiDTO);
 
     List<CourseDTO>  getAllCourse(String sid);
+
+    List<MessageDTO> getAllMessage(String sid);
 }

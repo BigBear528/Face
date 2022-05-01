@@ -7,20 +7,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.face.common.Constants;
 import com.face.controller.dto.*;
 import com.face.exception.ServiceException;
-import com.face.mapper.AttendanceMapper;
-import com.face.mapper.RecordMapper;
-import com.face.mapper.StudentMapper;
-import com.face.mapper.TeacherMapper;
-import com.face.pojo.Attendance;
-import com.face.pojo.Record;
-import com.face.pojo.Student;
-import com.face.pojo.Teacher;
+import com.face.mapper.*;
+import com.face.pojo.*;
 import com.face.service.ITeacherService;
 import com.face.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -35,6 +30,9 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
 
     @Autowired
     private StudentMapper studentMapper;
+
+    @Autowired
+    private MessageMapper messageMapper;
 
 
     @Override
@@ -163,10 +161,22 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
             UpdateWrapper<Record> recordUpdateWrapper = new UpdateWrapper<>();
             recordUpdateWrapper.eq("aid", applicationDTO.getAid()).eq("sid", applicationDTO.getSid()).set("status", applicationDTO.getStatus()).set("teacherReason", applicationDTO.getReason());
             int i = recordMapper.update(null, recordUpdateWrapper);
+
+            Message message = new Message();
+            message.setAid(applicationDTO.getAid());
+            message.setReason(applicationDTO.getReason());
+            message.setStatus(applicationDTO.getStatus());
+            message.setSid(applicationDTO.getSid());
+            long time = new Date().getTime();
+            int timestamp = (int) (time / 1000);
+            message.setTime(timestamp);
+
+            messageMapper.insert(message);
+
+
             if (i > 0) {
                 return true;
             }
-
         }
 
         return false;
@@ -227,7 +237,7 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
     }
 
     @Override
-    public  List<AttendanceSheetDTO> getAttendanceSheet(int cid) {
+    public List<AttendanceSheetDTO> getAttendanceSheet(int cid) {
 
         QueryWrapper<Attendance> attendanceQueryWrapper = new QueryWrapper<>();
         attendanceQueryWrapper.eq("cid", cid);
@@ -248,7 +258,7 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
                 Record record = recordList.get(j);
 
                 QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
-                studentQueryWrapper.eq("id",record.getSid());
+                studentQueryWrapper.eq("id", record.getSid());
                 Student student = studentMapper.selectOne(studentQueryWrapper);
 
                 attendanceSheet.setSid(record.getSid());
