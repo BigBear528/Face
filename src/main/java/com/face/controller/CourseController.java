@@ -3,9 +3,7 @@ package com.face.controller;
 
 import com.face.common.Constants;
 import com.face.common.Result;
-import com.face.exception.ServiceException;
 import com.face.pojo.Course;
-import com.face.service.IClassService;
 import com.face.service.ICourseService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

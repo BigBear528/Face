@@ -1,13 +1,10 @@
 package com.face.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.face.common.Constants;
 import com.face.exception.ServiceException;
-import com.face.mapper.ClassMapper;
 import com.face.mapper.CourseMapper;
-import com.face.pojo.Class;
 import com.face.pojo.Course;
 import com.face.service.ICourseService;
 import org.springframework.beans.factory.annotation.Autowired;

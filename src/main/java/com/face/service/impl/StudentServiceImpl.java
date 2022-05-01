@@ -9,8 +9,8 @@ import com.face.common.Constants;
 import com.face.controller.dto.*;
 import com.face.exception.ServiceException;
 import com.face.mapper.*;
-import com.face.pojo.*;
 import com.face.pojo.Class;
+import com.face.pojo.*;
 import com.face.service.IStudentService;
 import com.face.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +35,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
     @Autowired
     private TeacherMapper teacherMapper;
+
+    @Autowired
+    private CourseMapper courseMapper;
 
 
     @Override
@@ -70,12 +73,6 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         try {
             student = getOne(queryWrapper); // 从数据库查询用户信息
             if (student != null) {
-//        StudentDTO studentDTO = new StudentDTO();
-//        BeanUtil.copyProperties(student, studentDTO, true);
-//        String token = TokenUtils.genToken(student.getId(),student.getPassword());
-//        studentDTO.setToken(token);
-//        return studentDTO;
-
                 UpdateWrapper<Student> updateWrapper = new UpdateWrapper<>();
                 updateWrapper.eq("id", changePasswordDTO.getId()).set("password", changePasswordDTO.getNewPassword());
                 boolean isUpdate = update(updateWrapper);
@@ -343,31 +340,41 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         }
 
         return true;
+    }
 
-//        QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.eq("aid", record.getAid());
-//        queryWrapper.eq("sid", record.getSid());
-//        Record record1 = recordMapper.selectOne(queryWrapper);
-//
-//        if (record1 != null) {
-////            record1.setTime(record.getTime());
-////            record1.setStatus(1);
-//
-//            UpdateWrapper<Record> updateWrapper = new UpdateWrapper<>();
-//            updateWrapper.eq("aid", record.getAid())
-//                    .eq("sid", record.getSid())
-//                    .set("status", 1)
-//                    .set("time", record.getTime());
-////            int i = recordMapper.updateById(record1);
-//            int i = recordMapper.update(null, updateWrapper);
-//            if (i > 0) {
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        } else {
-//            return false;
-//        }
+    @Override
+    public  List<CourseDTO>  getAllCourse(String sid) {
+        QueryWrapper<Course> courseQueryWrapper = new QueryWrapper<>();
+        courseQueryWrapper.eq("sid", sid);
+        List<Course> courseList = courseMapper.selectList(courseQueryWrapper);
+
+        List<CourseDTO> courseDTOList = new ArrayList<>();
+
+        for (int i = 0; i < courseList.size(); i++) {
+            Course course = courseList.get(i);
+
+            CourseDTO courseDTO = new CourseDTO();
+
+            QueryWrapper<Class> classQueryWrapper = new QueryWrapper<>();
+            classQueryWrapper.eq("cid",course.getCid());
+            Class aClass = classMapper.selectOne(classQueryWrapper);
+
+            courseDTO.setCid(aClass.getCid());
+            courseDTO.setCName(aClass.getName());
+            courseDTO.setEnd(aClass.getEnd());
+            courseDTO.setType(aClass.getType());
+
+            QueryWrapper<Teacher> teacherQueryWrapper = new QueryWrapper<>();
+            teacherQueryWrapper.eq("id",aClass.getTid());
+            Teacher teacher = teacherMapper.selectOne(teacherQueryWrapper);
+
+            courseDTO.setTName(teacher.getName());
+
+            courseDTOList.add(courseDTO);
+        }
+
+        return courseDTOList;
+
     }
 
 

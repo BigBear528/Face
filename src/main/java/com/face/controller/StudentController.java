@@ -4,12 +4,14 @@ import cn.hutool.core.util.StrUtil;
 import com.face.common.Constants;
 import com.face.common.Result;
 import com.face.controller.dto.*;
-import com.face.pojo.Course;
 import com.face.pojo.Record;
 import com.face.pojo.Student;
 import com.face.service.IStudentService;
 import com.face.utils.DistanceUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -147,16 +149,18 @@ public class StudentController {
     @PostMapping("/faceSuccessMulti")
     public Result faceSuccessMulti(@RequestBody faceSuccessMultiDTO faceSuccessMultiDTO){
         if (faceSuccessMultiDTO != null) {
-//            Record record = new Record();
-//            record.setAid(faceSuccessDTO.getAid());
-//            record.setSid(faceSuccessDTO.getSid());
-//            record.setTime(faceSuccessDTO.getTime());
             Boolean isSuccess = iStudentService.faceSuccessMulti(faceSuccessMultiDTO);
 
             return Result.success(isSuccess);
         } else {
             return Result.error(Constants.CODE_400, "参数错误");
         }
+    }
 
+    @PostMapping("/getAllCourse")
+    public Result getAllCourse(@RequestBody String sid){
+        List<CourseDTO> allCourse = iStudentService.getAllCourse(sid);
+
+        return Result.success(allCourse);
     }
 }

@@ -29,4 +29,6 @@ public interface IStudentService extends IService<Student> {
     List<String> getSidListBy(int aid);
 
     Boolean faceSuccessMulti(faceSuccessMultiDTO faceSuccessMultiDTO);
+
+    List<CourseDTO>  getAllCourse(String sid);
 }

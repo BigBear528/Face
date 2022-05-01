@@ -2,7 +2,6 @@ package com.face.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.face.controller.dto.*;
-import com.face.pojo.Record;
 import com.face.pojo.Teacher;
 
 import java.util.List;

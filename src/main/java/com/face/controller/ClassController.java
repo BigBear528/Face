@@ -6,13 +6,14 @@ import com.face.common.Constants;
 import com.face.common.Result;
 import com.face.controller.dto.GetClassDTO;
 import com.face.controller.dto.createClassDTO;
-import com.face.exception.ServiceException;
 import com.face.pojo.Class;
 import com.face.service.IClassService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

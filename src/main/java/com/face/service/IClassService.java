@@ -2,7 +2,6 @@ package com.face.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.face.controller.dto.GetClassDTO;
-import com.face.controller.dto.createClassDTO;
 import com.face.pojo.Class;
 
 import java.util.List;
