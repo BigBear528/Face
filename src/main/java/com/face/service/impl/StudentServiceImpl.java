@@ -200,10 +200,10 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 //            record1.setStatus(1);
 
             UpdateWrapper<Record> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("aid",record.getAid())
-                    .eq("sid",record.getSid())
-                    .set("status",1)
-                    .set("time",record.getTime());
+            updateWrapper.eq("aid", record.getAid())
+                    .eq("sid", record.getSid())
+                    .set("status", 1)
+                    .set("time", record.getTime());
 //            int i = recordMapper.updateById(record1);
             int i = recordMapper.update(null, updateWrapper);
             if (i > 0) {
@@ -288,11 +288,11 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 //            record1.setReason(record.getReason());
 
             UpdateWrapper<Record> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("aid",record.getAid())
-                    .eq("sid",record.getSid())
-                    .set("status",2)
-                    .set("time",record.getTime())
-                    .set("reason",record.getReason());
+            updateWrapper.eq("aid", record.getAid())
+                    .eq("sid", record.getSid())
+                    .set("status", 2)
+                    .set("time", record.getTime())
+                    .set("reason", record.getReason());
 //            int i = recordMapper.updateById(record1);
             int i = recordMapper.update(null, updateWrapper);
             if (i > 0) {
@@ -303,6 +303,22 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         } else {
             return false;
         }
+    }
+
+    @Override
+    public  List<String> getSidListBy(int aid) {
+        QueryWrapper<Record> recordQueryWrapper = new QueryWrapper<>();
+        recordQueryWrapper.eq("aid", aid);
+        List<Record> recordList = recordMapper.selectList(recordQueryWrapper);
+
+        List<String> sidList = new ArrayList<>();
+
+        for (int i = 0; i < recordList.size(); i++) {
+            Record record = recordList.get(i);
+            sidList.add(record.getSid());
+        }
+
+        return sidList;
     }
 
 

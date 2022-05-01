@@ -105,7 +105,7 @@ public class StudentController {
 
     @PostMapping("/faceSuccess")
     public Result faceSuccess(@RequestBody faceSuccessDTO faceSuccessDTO) {
-        if(faceSuccessDTO!=null){
+        if (faceSuccessDTO != null) {
             Record record = new Record();
             record.setAid(faceSuccessDTO.getAid());
             record.setSid(faceSuccessDTO.getSid());
@@ -113,16 +113,16 @@ public class StudentController {
             Boolean isSuccess = iStudentService.faceSuccess(record);
 
             return Result.success(isSuccess);
-        }else {
+        } else {
             return Result.error(Constants.CODE_400, "参数错误");
         }
 
     }
 
     @PostMapping("/leaveApplication")
-    public Result leaveApplication(@RequestBody LeaveApplicationDTO leaveApplicationDTO){
+    public Result leaveApplication(@RequestBody LeaveApplicationDTO leaveApplicationDTO) {
 
-        if(leaveApplicationDTO!=null){
+        if (leaveApplicationDTO != null) {
             Record record = new Record();
             record.setAid(leaveApplicationDTO.getAid());
             record.setSid(leaveApplicationDTO.getSid());
@@ -130,8 +130,17 @@ public class StudentController {
             record.setReason(leaveApplicationDTO.getReason());
             Boolean isSuccess = iStudentService.leaveApplication(record);
             return Result.success(isSuccess);
-        }else {
+        } else {
             return Result.error(Constants.CODE_400, "参数错误");
         }
+    }
+
+    @PostMapping("/getSidList")
+    public Result getSidList(@RequestBody int aid) {
+
+        List<String> sidList = iStudentService.getSidListBy(aid);
+
+        return Result.success(sidList);
+
     }
 }
