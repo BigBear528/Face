@@ -196,12 +196,16 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         Record record1 = recordMapper.selectOne(queryWrapper);
 
         if (record1 != null) {
-            record1.setTime(record.getTime());
-            record1.setStatus(1);
+//            record1.setTime(record.getTime());
+//            record1.setStatus(1);
 
-//            UpdateWrapper<Record> updateWrapper = new UpdateWrapper<>();
-//            updateWrapper.eq("aid",record.getAid()).eq("sid",record.getSid()).set("status",1).set("time",record.getTime());
-            int i = recordMapper.updateById(record1);
+            UpdateWrapper<Record> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("aid",record.getAid())
+                    .eq("sid",record.getSid())
+                    .set("status",1)
+                    .set("time",record.getTime());
+//            int i = recordMapper.updateById(record1);
+            int i = recordMapper.update(null, updateWrapper);
             if (i > 0) {
                 return true;
             } else {
